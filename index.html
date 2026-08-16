@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GTM Sandbox — Home</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- dataLayer must exist before GTM boots -->
+  <script>window.dataLayer = window.dataLayer || [];</script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/source.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/pages.js" defer></script>
+  <script src="assets/js/inspector.js" defer></script>
+</head>
+<body data-page="home">
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand">GTM Sandbox</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="spacer"></div>
+      <a href="cart.html" class="cart-link">Cart <span id="cart-badge">0</span></a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>GTM &amp; GA4 Practice Sandbox</h1>
+      <p>A deliberately-underbuilt store for tag / trigger / variable exercises. Pushes are visible in the inspector at the bottom-right.</p>
+      <a class="btn btn-primary" href="products.html">Browse products</a>
+    </section>
+
+    <section class="section">
+      <h2>Where to go</h2>
+      <ul class="pill-list">
+        <li><a href="products.html">Product list (view_item_list)</a></li>
+        <li><a href="product.html?id=sku-001">A product page (view_item)</a></li>
+        <li><a href="cart.html">Cart (view_cart)</a></li>
+        <li><a href="checkout.html">Checkout (begin_checkout)</a></li>
+        <li><a href="thankyou.html">Thank you (purchase)</a></li>
+        <li><a href="contact.html">Contact form</a></li>
+        <li><a href="about.html">About (long, for scroll depth)</a></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Deliberate gaps — no dataLayer pushes here</h2>
+      <p class="gap-notice">
+        The elements below intentionally do NOT push to the dataLayer. Practice creating GTM click triggers off their CSS selectors, IDs, classes, and <code>data-*</code> attributes.
+      </p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+        <button type="button" id="newsletter-btn" class="btn">Subscribe to newsletter</button>
+        <a href="assets/brochure.pdf" class="btn" download>Download brochure (PDF)</a>
+        <a href="https://example.com" class="btn" rel="noopener" target="_blank">Outbound link (example.com)</a>
+        <button type="button" class="btn track-me" data-label="hero-primary">Track me A</button>
+        <button type="button" class="btn track-me" data-label="hero-secondary">Track me B</button>
+        <button type="button" class="btn track-me" data-label="hero-tertiary">Track me C</button>
+        <a href="tel:+15551234567" class="btn">Call us</a>
+        <a href="mailto:sandbox@example.com" class="btn">Email us</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>GTM Sandbox — for practice only. No real analytics IDs.</p>
+  </footer>
+</body>
+</html>

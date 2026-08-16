@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GTM Sandbox — Thank You</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>window.dataLayer = window.dataLayer || [];</script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/source.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/pages.js" defer></script>
+  <script src="assets/js/inspector.js" defer></script>
+</head>
+<body data-page="thankyou">
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand">GTM Sandbox</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="spacer"></div>
+      <a href="cart.html" class="cart-link">Cart <span id="cart-badge">0</span></a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <p class="card-meta">Note: the <code>purchase</code> event was already pushed on the checkout page (before this redirect). This page just confirms the order details from sessionStorage.</p>
+      <div id="order-root"></div>
+      <p style="margin-top: 24px;"><a class="btn" href="products.html">Continue shopping</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>GTM Sandbox — for practice only.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live Shop Watcher — SGTM Sandbox</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #171e26;
+    --panel-2: #1f2731;
+    --border: #2a3441;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --good: #3fb950;
+    --warn: #d29922;
+    --bad: #f85149;
+    --pill-bg: #21262d;
+    --welcome: #1c2b3a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; height: 100%; }
+
+  header {
+    display: flex; align-items: center; gap: 20px; padding: 14px 22px;
+    background: var(--panel); border-bottom: 1px solid var(--border); flex-wrap: wrap;
+  }
+  header h1 { font-size: 17px; margin: 0; font-weight: 700; }
+  header .status { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+  header .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--good); box-shadow: 0 0 8px var(--good); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  header .stat { color: var(--muted); font-size: 13px; }
+  header .stat b { color: var(--text); font-weight: 700; font-size: 15px; }
+  header .grow { flex: 1; }
+  header button {
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 7px 14px; border-radius: 6px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 500;
+  }
+  header button:hover { border-color: var(--accent); color: var(--accent); }
+  header button.on { background: var(--accent); color: #001d35; border-color: var(--accent); }
+
+  main { display: grid; grid-template-columns: 340px 1fr; gap: 0; height: calc(100vh - 55px); }
+  aside { background: var(--panel); border-right: 1px solid var(--border); overflow-y: auto; padding: 16px; }
+  section.feed { overflow-y: auto; padding: 0; }
+
+  aside h2 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--muted);
+    margin: 20px 0 10px; font-weight: 700;
+  }
+  aside h2:first-child { margin-top: 0; }
+  aside .hint { color: var(--muted); font-size: 12px; line-height: 1.55; margin-bottom: 10px; }
+
+  .src-row {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px;
+    cursor: pointer; margin-bottom: 4px; border: 1px solid transparent;
+  }
+  .src-row:hover { background: var(--panel-2); }
+  .src-row.active { background: var(--panel-2); border-color: var(--accent); }
+  .src-row .src-name { flex: 1; font-weight: 600; font-size: 14px; }
+  .src-row .src-name small { display: block; color: var(--muted); font-size: 11px; font-weight: 400; margin-top: 2px; }
+  .src-row .src-count {
+    background: var(--pill-bg); padding: 3px 10px; border-radius: 12px;
+    font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 600;
+  }
+  .src-row .src-swatch { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+  details.glossary summary {
+    cursor: pointer; padding: 8px 10px; background: var(--panel-2); border-radius: 6px;
+    font-size: 12px; color: var(--muted); user-select: none;
+  }
+  details.glossary summary:hover { color: var(--text); }
+  details.glossary[open] summary { color: var(--text); }
+  details.glossary .glossary-body {
+    padding: 10px 4px; font-size: 12px; line-height: 1.6; color: var(--muted);
+  }
+  details.glossary .glossary-body dt { color: var(--text); font-weight: 600; margin-top: 8px; }
+  details.glossary .glossary-body dd { margin: 2px 0 0; }
+
+  .thead {
+    position: sticky; top: 0; z-index: 1; background: var(--panel);
+    border-bottom: 1px solid var(--border); padding: 12px 20px;
+    display: grid; grid-template-columns: 110px 130px 130px 1fr; gap: 16px;
+  }
+  .thead .col-label { color: var(--text); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; }
+  .thead .col-hint { color: var(--muted); font-size: 11px; margin-top: 2px; font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+  .event {
+    padding: 12px 20px; border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: 110px 130px 130px 1fr; gap: 16px; align-items: start;
+  }
+  .event.new { animation: flash 1.2s ease-out; }
+  @keyframes flash { from { background: rgba(88,166,255,0.15); } to { background: transparent; } }
+  .event .col-time {
+    color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+  }
+  .event .col-type {
+    display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; height: fit-content;
+  }
+  .type-pageview  { background: rgba(88,166,255,0.15);  color: var(--accent); }
+  .type-click     { background: rgba(63,185,80,0.15);   color: var(--good); }
+  .type-datalayer { background: rgba(210,153,34,0.15);  color: var(--warn); }
+  .event .col-src { }
+  .event .col-detail { color: var(--text); word-break: break-word; }
+  .event .col-detail .title { font-weight: 600; font-size: 14px; line-height: 1.35; }
+  .event .col-detail .sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
+  .event .col-detail details { margin-top: 6px; }
+  .event .col-detail details summary { color: var(--muted); cursor: pointer; font-size: 11px; user-select: none; }
+  .event .col-detail details summary:hover { color: var(--text); }
+  .event .col-detail pre {
+    margin: 6px 0 0; padding: 10px 12px; background: var(--panel-2);
+    border: 1px solid var(--border); border-radius: 6px; font-size: 11px;
+    max-height: 260px; overflow: auto; white-space: pre-wrap; word-break: break-all;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+  }
+
+  .src-badge {
+    display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px;
+    background: var(--pill-bg); border-radius: 12px; font-size: 12px; font-weight: 500;
+  }
+  .src-badge .swatch { width: 9px; height: 9px; border-radius: 50%; }
+
+  .welcome {
+    background: var(--welcome); border: 1px solid var(--border);
+    margin: 20px; padding: 24px; border-radius: 10px;
+  }
+  .welcome h3 { margin: 0 0 12px; font-size: 17px; color: var(--accent); }
+  .welcome p { margin: 0 0 10px; color: var(--text); font-size: 14px; line-height: 1.6; }
+  .welcome ol { margin: 12px 0 0; padding-left: 22px; color: var(--text); line-height: 1.9; }
+  .welcome code { background: var(--panel-2); padding: 2px 8px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', Menlo, monospace; }
+  .welcome .close { float: right; background: transparent; border: none; color: var(--muted); font-size: 22px; cursor: pointer; line-height: 1; padding: 0 4px; }
+  .welcome .close:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Live Shop Watcher</h1>
+  <div class="status"><span class="dot"></span><span>Watching for visitors</span></div>
+  <div class="stat">Things happened <b id="stat-count">0</b></div>
+  <div class="stat">People visiting <b id="stat-clients">0</b></div>
+  <div class="stat">Last thing <b id="stat-last">nothing yet</b></div>
+  <div class="grow"></div>
+  <button id="help-btn" title="Show the welcome guide again">Help</button>
+  <button id="pause-btn">Pause</button>
+  <button id="clear-btn">Clear</button>
+</header>
+
+<main>
+  <aside>
+    <h2>Where visitors came from</h2>
+    <div class="hint">Click a source to only show things that visitor did.</div>
+    <div id="src-list"></div>
+
+    <h2>Types of things</h2>
+    <div id="type-list"></div>
+
+    <h2>What do these words mean?</h2>
+    <details class="glossary">
+      <summary>Click to show the cheat sheet</summary>
+      <div class="glossary-body">
+        <dt>Visitor</dt>
+        <dd>One person on their browser. If they open the shop on their phone AND laptop, that's 2 visitors.</dd>
+        <dt>Source</dt>
+        <dd>Where the visitor came from — a Facebook ad, a Google search ad, an email, or they typed the URL themselves.</dd>
+        <dt>Pageview</dt>
+        <dd>Somebody just landed on a page of the shop.</dd>
+        <dt>Click</dt>
+        <dd>Somebody clicked a button or link on a page.</dd>
+        <dt>Behind-the-scenes</dt>
+        <dd>The website whispered something to Google Tag Manager (like "the page is loaded" or "they added something to the cart"). You didn't see it happen — the code did it.</dd>
+        <dt>click_id</dt>
+        <dd>A fingerprint the ad platform (Facebook, Google) attaches to a click so they can later say "yes — that click I sent you turned into a sale."</dd>
+        <dt>UTM (source / medium / campaign)</dt>
+        <dd>Little name-tags glued onto the URL by the marketer so the shop knows which ad brought this person in.</dd>
+      </div>
+    </details>
+  </aside>
+
+  <section class="feed">
+    <div class="thead">
+      <div><div class="col-label">When</div><div class="col-hint">time it happened</div></div>
+      <div><div class="col-label">What</div><div class="col-hint">kind of thing</div></div>
+      <div><div class="col-label">Who</div><div class="col-hint">where they came from</div></div>
+      <div><div class="col-label">Details</div><div class="col-hint">plain-English description</div></div>
+    </div>
+    <div id="feed">
+      <div class="welcome" id="welcome">
+        <button class="close" id="welcome-close" title="Hide">&times;</button>
+        <h3>Welcome! This is your live shop watcher.</h3>
+        <p>Whenever somebody lands on your shop, clicks something, or does anything at all, it will pop up here in real time — with a plain-English description of what happened and where they came from.</p>
+        <p><strong>Try it right now:</strong></p>
+        <ol>
+          <li>Open this dashboard in one tab and leave it here.</li>
+          <li>In a new tab, go to <code>http://localhost:8002/</code> (the fake Facebook ad).</li>
+          <li>Click the ad's button. The shop opens with a name-tag that says "this person came from Facebook."</li>
+          <li>Click around the shop — add stuff to the cart, go to checkout. Every single click shows up on this dashboard.</li>
+          <li>Come back here to see it all!</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var CHANNEL = 'sgtm-live';
+  var TICK_KEY = 'sgtm.tick';
+  var MAX_ROWS = 500;
+
+  // ---------- Translation tables — turn nerdy names into plain English ----------
+
+  var SOURCE_LABELS = {
+    'facebook':   { label: 'Facebook Ad',     hint: 'Clicked a Facebook post/ad' },
+    'google':     { label: 'Google Search Ad', hint: 'Clicked a Google ad' },
+    'newsletter': { label: 'Email Newsletter', hint: 'Clicked a link in an email' },
+    '(direct)':   { label: 'Typed URL directly', hint: 'No ad — visited the shop directly' }
+  };
+
+  var TYPE_LABELS = {
+    'pageview':  { label: 'Pageview',         hint: 'Landed on a page' },
+    'click':     { label: 'Click',            hint: 'Clicked a button or link' },
+    'datalayer': { label: 'Behind-the-scenes', hint: 'The website talked to tracking code' }
+  };
+
+  var DATALAYER_TRANSLATIONS = {
+    'gtm.js':          'The tracking toolbox started loading',
+    'gtm.dom':         'The page skeleton finished building',
+    'gtm.load':        'The page is fully loaded (pictures, styles, everything)',
+    'gtm.click':       'The tracking code noticed a click',
+    'gtm.formSubmit':  'The tracking code noticed a form was submitted',
+    'gtm.scrollDepth': 'The visitor scrolled down the page',
+    'user_data':       'Recorded who this visitor is',
+    'view_item_list':  'They’re looking at the product list',
+    'view_item':       'They opened a specific product page',
+    'select_item':     'They clicked on a product from the list',
+    'add_to_cart':     'They added something to their cart',
+    'remove_from_cart':'They removed something from their cart',
+    'view_cart':       'They opened their cart',
+    'begin_checkout':  'They started checking out',
+    'add_payment_info':'They entered payment info',
+    'add_shipping_info':'They entered shipping info',
+    'purchase':        'THEY BOUGHT SOMETHING!'
+  };
+
+  function friendlyDataLayerName(rawName) {
+    if (rawName in DATALAYER_TRANSLATIONS) return DATALAYER_TRANSLATIONS[rawName];
+    return 'Sent a "' + rawName + '" event';
+  }
+
+  function sourceInfo(src) {
+    if (SOURCE_LABELS[src]) return SOURCE_LABELS[src];
+    return { label: src, hint: 'Came from ' + src };
+  }
+
+  function typeInfo(t) {
+    if (TYPE_LABELS[t]) return TYPE_LABELS[t];
+    return { label: t, hint: '' };
+  }
+
+  // ---------- Wiring ----------
+
+  var feed = document.getElementById('feed');
+  var srcList = document.getElementById('src-list');
+  var typeList = document.getElementById('type-list');
+  var pauseBtn = document.getElementById('pause-btn');
+  var clearBtn = document.getElementById('clear-btn');
+  var helpBtn = document.getElementById('help-btn');
+  var statCount = document.getElementById('stat-count');
+  var statClients = document.getElementById('stat-clients');
+  var statLast = document.getElementById('stat-last');
+
+  var paused = false;
+  var totalCount = 0;
+  var sourceCounts = {};
+  var typeCounts = {};
+  var clients = {};
+  var seenSeq = {};
+  var activeSourceFilter = null;
+
+  var SWATCHES = ['#58a6ff','#3fb950','#d29922','#f85149','#bc8cff','#ff9b6a','#39d0d8','#f778ba'];
+  var sourceColors = {};
+  function colorFor(src) {
+    if (!sourceColors[src]) {
+      sourceColors[src] = SWATCHES[Object.keys(sourceColors).length % SWATCHES.length];
+    }
+    return sourceColors[src];
+  }
+
+  function fmtTime(iso) {
+    var d = new Date(iso);
+    var h = d.getHours();
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    var h12 = h % 12; if (h12 === 0) h12 = 12;
+    var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+    return h12 + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + ' ' + ampm;
+  }
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function safeStringify(v) {
+    try { return JSON.stringify(v, null, 2); } catch (e) { return String(v); }
+  }
+  function eventName(d) {
+    if (!d) return '(null)';
+    if (typeof d !== 'object') return '(' + typeof d + ')';
+    if (d.event) return d.event;
+    if (d['gtm.start']) return 'gtm.start';
+    return Object.keys(d)[0] || '(anonymous)';
+  }
+
+  var PAGE_NAMES = {
+    '/': 'the Home page',
+    '/index.html': 'the Home page',
+    '/products.html': 'the Products page',
+    '/product.html': 'a Product page',
+    '/cart.html': 'the Cart page',
+    '/checkout.html': 'the Checkout page',
+    '/thankyou.html': 'the Thank-You page',
+    '/contact.html': 'the Contact page',
+    '/about.html': 'the About page'
+  };
+  function friendlyPage(path) {
+    if (path in PAGE_NAMES) return PAGE_NAMES[path];
+    return 'page ' + path;
+  }
+
+  function summarize(msg) {
+    var a = msg.attribution || {};
+    if (msg.type === 'pageview') {
+      return {
+        title: 'Landed on ' + friendlyPage(msg.page),
+        sub: 'Page title: "' + (msg.page_title || 'Untitled') + '"'
+      };
+    }
+    if (msg.type === 'click') {
+      var t = (msg.payload && msg.payload.target) || {};
+      var what = t.text || t.id || t.tag || 'something';
+      var where = friendlyPage(msg.page);
+      var extra = [];
+      if (t.href) extra.push('link to ' + t.href);
+      else if (t.tag === 'button') extra.push('a button');
+      else if (t.tag) extra.push('a <' + t.tag + '> element');
+      return {
+        title: 'Clicked "' + what + '" on ' + where,
+        sub: extra.join(' · ')
+      };
+    }
+    if (msg.type === 'datalayer') {
+      var name = eventName(msg.payload);
+      return {
+        title: friendlyDataLayerName(name),
+        sub: 'On ' + friendlyPage(msg.page) + ' (technical name: ' + name + ')'
+      };
+    }
+    return { title: msg.type, sub: '' };
+  }
+
+  function render(msg) {
+    var s = summarize(msg);
+    var src = (msg.attribution && msg.attribution.utm_source) || '(direct)';
+    var srcMeta = sourceInfo(src);
+    var camp = (msg.attribution && msg.attribution.utm_campaign) || null;
+    var med  = (msg.attribution && msg.attribution.utm_medium)   || null;
+    var color = colorFor(src);
+
+    var metaLine = [];
+    if (med && med !== '(none)') metaLine.push('how: ' + med);
+    if (camp && camp !== '(none)') metaLine.push('campaign: ' + camp);
+    if (msg.attribution && msg.attribution.click_id) metaLine.push('click_id: ' + msg.attribution.click_id);
+
+    var tMeta = typeInfo(msg.type);
+
+    var row = document.createElement('div');
+    row.className = 'event new';
+    row.setAttribute('data-source', src);
+    row.innerHTML =
+      '<div class="col-time">' + fmtTime(msg.ts) + '</div>' +
+      '<div><span class="col-type type-' + msg.type + '" title="' + escapeHtml(tMeta.hint) + '">' + escapeHtml(tMeta.label) + '</span></div>' +
+      '<div class="col-src">' +
+        '<span class="src-badge" title="' + escapeHtml(srcMeta.hint) + '">' +
+          '<span class="swatch" style="background:' + color + '"></span>' + escapeHtml(srcMeta.label) +
+        '</span>' +
+      '</div>' +
+      '<div class="col-detail">' +
+        '<div class="title">' + escapeHtml(s.title) + '</div>' +
+        (s.sub ? '<div class="sub">' + escapeHtml(s.sub) + '</div>' : '') +
+        (metaLine.length ? '<div class="sub">' + escapeHtml(metaLine.join('  ·  ')) + '</div>' : '') +
+        '<details><summary>show raw data (for nerds)</summary><pre>' + escapeHtml(safeStringify(msg)) + '</pre></details>' +
+      '</div>';
+
+    if (activeSourceFilter && activeSourceFilter !== src) row.style.display = 'none';
+
+    var welcome = document.getElementById('welcome');
+    if (welcome) welcome.remove();
+    feed.insertBefore(row, feed.firstChild);
+
+    while (feed.children.length > MAX_ROWS) feed.removeChild(feed.lastChild);
+    setTimeout(function () { row.classList.remove('new'); }, 1300);
+  }
+
+  function paint() {
+    var srcHTML = '';
+    var sorted = Object.keys(sourceCounts).sort(function (a, b) { return sourceCounts[b] - sourceCounts[a]; });
+    sorted.forEach(function (src) {
+      var meta = sourceInfo(src);
+      var color = colorFor(src);
+      srcHTML +=
+        '<div class="src-row' + (activeSourceFilter === src ? ' active' : '') + '" data-src="' + escapeHtml(src) + '" title="' + escapeHtml(meta.hint) + '">' +
+          '<span class="src-swatch" style="background:' + color + '"></span>' +
+          '<span class="src-name">' + escapeHtml(meta.label) + '<small>' + escapeHtml(meta.hint) + '</small></span>' +
+          '<span class="src-count">' + sourceCounts[src] + '</span>' +
+        '</div>';
+    });
+    if (!sorted.length) srcHTML = '<div class="hint">Nobody has visited yet.</div>';
+    srcList.innerHTML = srcHTML;
+
+    var typeHTML = '';
+    Object.keys(typeCounts).sort().forEach(function (t) {
+      var meta = typeInfo(t);
+      typeHTML +=
+        '<div class="src-row" style="cursor:default;" title="' + escapeHtml(meta.hint) + '">' +
+          '<span class="col-type type-' + t + '" style="margin:0;">' + escapeHtml(meta.label) + '</span>' +
+          '<span class="src-name" style="margin-left:8px;font-size:12px;color:var(--muted);font-weight:400;">' + escapeHtml(meta.hint) + '</span>' +
+          '<span class="src-count">' + typeCounts[t] + '</span>' +
+        '</div>';
+    });
+    typeList.innerHTML = typeHTML || '<div class="hint">No events yet.</div>';
+
+    statCount.textContent = totalCount;
+    statClients.textContent = Object.keys(clients).length;
+  }
+
+  srcList.addEventListener('click', function (e) {
+    var row = e.target.closest('.src-row');
+    if (!row) return;
+    var src = row.getAttribute('data-src');
+    if (!src) return;
+    activeSourceFilter = (activeSourceFilter === src) ? null : src;
+    Array.prototype.forEach.call(feed.children, function (r) {
+      if (r.className === 'welcome') return;
+      r.style.display = (!activeSourceFilter || r.getAttribute('data-source') === activeSourceFilter) ? '' : 'none';
+    });
+    paint();
+  });
+
+  pauseBtn.addEventListener('click', function () {
+    paused = !paused;
+    pauseBtn.textContent = paused ? 'Resume' : 'Pause';
+    pauseBtn.classList.toggle('on', paused);
+  });
+  clearBtn.addEventListener('click', function () {
+    totalCount = 0; sourceCounts = {}; typeCounts = {}; clients = {}; seenSeq = {};
+    feed.innerHTML = '';
+    statLast.textContent = 'nothing yet';
+    paint();
+  });
+
+  var welcomeClose = document.getElementById('welcome-close');
+  if (welcomeClose) welcomeClose.addEventListener('click', function () {
+    var w = document.getElementById('welcome');
+    if (w) w.remove();
+  });
+  helpBtn.addEventListener('click', function () {
+    if (document.getElementById('welcome')) return;
+    var w = document.createElement('div');
+    w.className = 'welcome';
+    w.id = 'welcome';
+    w.innerHTML =
+      '<button class="close" id="welcome-close-2" title="Hide">&times;</button>' +
+      '<h3>How to use this dashboard</h3>' +
+      '<p>Every row that appears below is one thing that just happened on the shop. Read left to right:</p>' +
+      '<ol>' +
+        '<li><strong>When</strong> — the exact time it happened.</li>' +
+        '<li><strong>What</strong> — Pageview (landed on a page), Click (clicked something), or Behind-the-scenes (the website talked to tracking code).</li>' +
+        '<li><strong>Who</strong> — where the visitor came from (Facebook Ad, Google, Email, or typed directly).</li>' +
+        '<li><strong>Details</strong> — a plain-English description of exactly what happened.</li>' +
+      '</ol>' +
+      '<p>Click a source in the left sidebar to only see that source\'s activity. Click "Pause" to freeze the screen while you read. Click "Clear" to wipe and start fresh.</p>';
+    feed.insertBefore(w, feed.firstChild);
+    document.getElementById('welcome-close-2').addEventListener('click', function () { w.remove(); });
+  });
+
+  function ingest(msg) {
+    if (!msg || !msg.type || !msg.client_id) return;
+    var dedupeKey = msg.client_id + ':' + msg.seq;
+    if (seenSeq[dedupeKey]) return;
+    seenSeq[dedupeKey] = 1;
+
+    if (paused) return;
+
+    totalCount++;
+    var src = (msg.attribution && msg.attribution.utm_source) || '(direct)';
+    sourceCounts[src] = (sourceCounts[src] || 0) + 1;
+    typeCounts[msg.type] = (typeCounts[msg.type] || 0) + 1;
+    clients[msg.client_id] = 1;
+    statLast.textContent = fmtTime(msg.ts);
+    render(msg);
+    paint();
+  }
+
+  try {
+    var ch = new BroadcastChannel(CHANNEL);
+    ch.onmessage = function (ev) { ingest(ev.data); };
+  } catch (e) {}
+
+  window.addEventListener('storage', function (ev) {
+    if (ev.key !== TICK_KEY || !ev.newValue) return;
+    try { ingest(JSON.parse(ev.newValue)); } catch (e) {}
+  });
+
+  paint();
+})();
+</script>
+
+</body>
+</html>

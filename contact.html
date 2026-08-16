@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GTM Sandbox — Contact</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>window.dataLayer = window.dataLayer || [];</script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/source.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/pages.js" defer></script>
+  <script src="assets/js/inspector.js" defer></script>
+</head>
+<body data-page="contact">
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand">GTM Sandbox</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="spacer"></div>
+      <a href="cart.html" class="cart-link">Cart <span id="cart-badge">0</span></a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h2>Contact us</h2>
+      <p class="gap-notice">
+        This form is a deliberate gap — no dataLayer push on submit. Practice a GTM form-submit trigger on <code>#contact-form</code>.
+      </p>
+
+      <form id="contact-form" class="form-grid" novalidate>
+        <label>Name
+          <input type="text" name="name">
+        </label>
+        <label>Email
+          <input type="email" name="email">
+        </label>
+        <label class="span-2">Subject
+          <input type="text" name="subject">
+        </label>
+        <label class="span-2">Message
+          <textarea name="message" rows="6"></textarea>
+        </label>
+        <div class="form-actions span-2">
+          <button type="submit" class="btn btn-primary">Send message</button>
+        </div>
+      </form>
+
+      <div style="margin-top: 24px; display:flex; gap: 12px; flex-wrap: wrap;">
+        <a href="tel:+15551234567" class="btn">Call: +1 555 123 4567</a>
+        <a href="mailto:sandbox@example.com" class="btn">Email: sandbox@example.com</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>GTM Sandbox — for practice only.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GTM Sandbox — Checkout</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>window.dataLayer = window.dataLayer || [];</script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/source.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/pages.js" defer></script>
+  <script src="assets/js/inspector.js" defer></script>
+</head>
+<body data-page="checkout">
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="brand">GTM Sandbox</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="spacer"></div>
+      <a href="cart.html" class="cart-link">Cart <span id="cart-badge">0</span></a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h2>Checkout</h2>
+      <p class="card-meta">Submitting fires <code>purchase</code> with a random <code>transaction_id</code>, then redirects to the thank-you page.</p>
+
+      <div id="checkout-summary" class="section"></div>
+
+      <form id="checkout-form" class="form-grid" novalidate>
+        <label class="span-2">Full name
+          <input type="text" name="name" required>
+        </label>
+        <label>Email
+          <input type="email" name="email" required>
+        </label>
+        <label>Phone
+          <input type="tel" name="phone">
+        </label>
+        <label class="span-2">Address
+          <input type="text" name="address">
+        </label>
+        <label>City
+          <input type="text" name="city">
+        </label>
+        <label>ZIP
+          <input type="text" name="zip">
+        </label>
+        <label class="span-2">Card number (fake)
+          <input type="text" name="card" placeholder="4242 4242 4242 4242">
+        </label>
+        <div class="form-actions span-2">
+          <button type="submit" class="btn btn-primary" id="place-order-btn">Place order</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>GTM Sandbox — for practice only.</p>
+  </footer>
+</body>
+</html>
