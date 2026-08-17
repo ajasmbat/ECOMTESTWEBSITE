@@ -33,17 +33,18 @@
     }
   });
 
-  // Standard GTM snippet — injected once, ID sourced from GTM_ID above.
-  (function (w, d, s, l, i) {
+  // GTM loader — Stape Custom Loader (first-party + ad blocker evasion).
+  (function (w, d, s, l, url, q) {
     w[l] = w[l] || [];
     w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
     var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s),
-        dl = l !== 'dataLayer' ? '&l=' + l : '';
+        j = d.createElement(s);
     j.async = true;
-    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+    j.src = url + '?' + q;
     f.parentNode.insertBefore(j, f);
-  })(window, document, 'script', 'dataLayer', GTM_ID);
+  })(window, document, 'script', 'dataLayer',
+     'https://data.ajasmbat.store/6kzckhyiky.js',
+     'q=EA9UPjwmTi4yWDkzKjNWXA9WW1dZTQcURAoDGBsGARsNRRoNBxkG');
 
   // Inject the <noscript> iframe fallback into <body> once it exists.
   function injectNoscript() {
@@ -51,7 +52,7 @@
     var ns = document.createElement('noscript');
     ns.id = '__gtm-noscript';
     ns.innerHTML =
-      '<iframe src="https://www.googletagmanager.com/ns.html?id=' + GTM_ID +
+      '<iframe src="https://data.ajasmbat.store/ns.html?id=' + GTM_ID +
       '" height="0" width="0" style="display:none;visibility:hidden"></iframe>';
     document.body.insertBefore(ns, document.body.firstChild);
   }
