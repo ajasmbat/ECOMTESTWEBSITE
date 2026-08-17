@@ -30,12 +30,14 @@
       label: 'Self-hosted (Fly)',
       short: 'selfhost',
       color: '#7b3aed',
-      // gtm.js direct from Google (subject to ad blockers — Phase 1 will fix)
-      loaderUrl: 'https://www.googletagmanager.com/gtm.js',
+      // Phase 1: load gtm.js from our first-party domain via sGTM's Web Container Client
+      // (defeats hostname-level ad-blocker rules; path is still /gtm.js so strict path
+      // matchers can still catch it — that's Phase 2 territory)
+      loaderUrl: 'https://betterdata.ajasmbat.store/gtm.js',
       loaderQuery: 'id=' + GTM_ID,
       // Where GTM sends events
       serverContainerUrl: 'https://betterdata.ajasmbat.store',
-      nsHost: 'https://www.googletagmanager.com'
+      nsHost: 'https://betterdata.ajasmbat.store'
     }
   };
 
