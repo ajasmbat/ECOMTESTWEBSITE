@@ -1,15 +1,15 @@
 /*
  * Central config for the GTM sandbox.
  *
- * Tagging server: https://data.ajasmbat.store
- * Web container:  GTM-T2F5VZTK
+ * Tagging server: https://sgtm-ajasmbat-store.fly.dev
+ * Web container:  GTM-5CX4WCSL
  *
  * The GTM snippet itself lives inline in each page's <head> (see any .html file).
  * This file only sets up the dataLayer instrumentation the on-page inspector
  * reads, so it must load BEFORE the GTM snippet.
  */
 (function () {
-  window.__GTM_ID = 'GTM-T2F5VZTK';
+  window.__GTM_ID = 'GTM-5CX4WCSL';
 
   // ---- dataLayer bootstrap + inspector hook ----
   window.dataLayer = window.dataLayer || [];
