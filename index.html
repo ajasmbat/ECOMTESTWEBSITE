@@ -9,16 +9,52 @@
   <script>window.dataLayer = window.dataLayer || [];</script>
   <script src="assets/js/config.js"></script>
   <!-- Google Tag Manager -->
-  <script>(function(w,n){var C="https://sgtm-ajasmbat-store.fly.dev/g/collect",R="https://sgtm-ajasmbat-store.fly.dev/k9putaclo0";
+  <script>(function(w,n){var C="https://sgtm-ajasmbat-store.fly.dev/g/collect",R="https://ajasmbat.store/sz4ar36dza/g/collect";
   var of=w.fetch;if(of){w.fetch=function(u,o){try{if(typeof u==='string'&&u.indexOf(C)===0){return of(u.replace(C,R),o).then(function(r){return(r&&r.ok)?r:of(u,o);},function(){return of(u,o);});}}catch(e){}return of(u,o);};}
   var nb=n&&n.sendBeacon;if(nb){n.sendBeacon=function(u,d){try{if(typeof u==='string'&&u.indexOf(C)===0){if(nb.call(n,u.replace(C,R),d))return true;}}catch(e){}return nb.call(n,u,d);};}
   })(window,navigator);</script>
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://sgtm-ajasmbat-store.fly.dev/srlu3jz36q?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-5CX4WCSL');</script>
+  'https://ajasmbat.store/sz4ar36dza/7907o0u9ye?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KW2FM8W9');</script>
   <!-- End Google Tag Manager -->
+  <!-- Cloak automatic events -->
+  <script>(function(w,d){try{
+  if(w.__cloakAuto)return;
+  var q=w.dataLayer;if(!q||!q.push)return;
+  w.__cloakAuto=1;
+  var P=function(n,p){try{var o={event:n};for(var k in p){var v=p[k];if(v!==''&&v!=null)o[k]=v;}q.push(o);}catch(e){}},
+  L=function(){return d.location},
+  H=function(h){h=(h||'').toLowerCase();return h.indexOf('www.')?h:h.slice(4)},
+  S=function(h){var a=H(h),b=H(L().hostname);return!a||a===b||a.slice(-b.length-1)==='.'+b||b.slice(-a.length-1)==='.'+a},
+  W=function(){return L().pathname+L().search+L().hash},
+  at=W(),said,
+  K=function(){var m=/[?&](search_query|search|query|keyword|q|s)=([^&#]*)/.exec(L().search),t=m?decodeURIComponent(m[2].replace(/\+/g,' ')):'',k=L().pathname+'|'+t;
+  if(t&&k!==said){said=k;P('site_search',{search_term:t,page_path:L().pathname+L().search})}},
+  N=function(){try{var n=W();if(n===at)return;at=n;P('virtual_page_view',{page_path:n,page_location:L().href,page_title:d.title});K()}catch(e){}},
+  Z=function(){w.setTimeout(N,0)},
+  h=w.history,o={capture:true,passive:true};
+  K();
+  if(h&&h.pushState){var ps=h.pushState,rs=h.replaceState;
+  h.pushState=function(){var r=ps.apply(this,arguments);Z();return r};
+  h.replaceState=function(){var r=rs.apply(this,arguments);Z();return r}}
+  w.addEventListener('popstate',Z);w.addEventListener('hashchange',Z);
+  d.addEventListener('click',function(e){try{
+  var t=e.target,a=t&&t.closest&&t.closest('a[href]');
+  if(!a)return;
+  var p=(a.protocol||'').toLowerCase();
+  if(p==='tel:'||p==='mailto:')return P('contact_click',{link_url:a.getAttribute('href'),contact_method:p==='tel:'?'phone':'email'});
+  if(p!=='http:'&&p!=='https:'||S(a.hostname))return;
+  P('outbound_click',{link_url:a.href,link_domain:(a.hostname||'').toLowerCase(),link_text:(a.textContent||'').replace(/\s+/g,' ').trim().slice(0,100),outbound:true})
+  }catch(x){}},o);
+  d.addEventListener('submit',function(e){try{
+  var f=e.target;if(!f||(f.tagName||'').toLowerCase()!=='form')return;
+  var n=+new Date();if(f.__cloakFs&&n-f.__cloakFs<1000)return;f.__cloakFs=n;
+  P('form_submission',{form_id:f.getAttribute('id'),form_name:f.getAttribute('name'),form_destination:f.action,form_length:f.elements&&f.elements.length})
+  }catch(x){}},o);
+  }catch(x){}})(window,document);</script>
+  <!-- End Cloak automatic events -->
   <script src="assets/js/source.js"></script>
   <script src="assets/js/data.js"></script>
   <script src="assets/js/cart.js"></script>
@@ -27,7 +63,7 @@
 </head>
 <body data-page="home">
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://sgtm-ajasmbat-store.fly.dev/ns.html?id=GTM-5CX4WCSL"
+<noscript><iframe src="https://ajasmbat.store/sz4ar36dza/ns.html?id=GTM-KW2FM8W9"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
   <header class="site-header">
