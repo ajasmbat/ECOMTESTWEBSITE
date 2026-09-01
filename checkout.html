@@ -3,6 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Tracklution -->
+  <script>
+    !function(t,l,r,o,c,k,s)
+    {if(t.tlq)return;c=t.tlq=function(){c.callMethod?
+        c.callMethod(arguments):c.queue.push(arguments)};
+        if(!t._tlq)t._tlq=c;c.push=c;c.loaded=!0;c.version='1.0';c.src=o;
+        c.queue=[];k=l.createElement(r);k.async=!0;c.pd = false;c.tools = null;
+        k.src=o;s=l.getElementsByTagName(r)[0];
+        s.parentNode.insertBefore(k,s);k.onerror=function(){
+        o='https://main-60864.trlution.com/js/script-dynamic.js?version=1788297737405';
+        t._tlq.src=o;k=l.createElement(r);k.async=!0;k.src=o;
+        s.parentNode.insertBefore(k, s)
+        }}(window,document,'script',
+        'https://tralut.ajasmbat.store/js/script-dynamic.js?version=1788297737405')
+
+    tlq('init', 'LS-47453901-6');
+  </script>
+  <!-- End Tracklution -->
   <title>GTM Sandbox — Checkout</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <script>window.dataLayer = window.dataLayer || [];</script>
@@ -11,10 +29,14 @@
   <script src="assets/js/source.js"></script>
   <script src="assets/js/data.js"></script>
   <script src="assets/js/cart.js"></script>
+  <script src="assets/js/tracklution.js"></script>
   <script src="assets/js/pages.js" defer></script>
   <script src="assets/js/inspector.js" defer></script>
 </head>
 <body data-page="checkout">
+  <script>
+    tlq('track', 'PageView');
+  </script>
   <header class="site-header">
     <div class="inner">
       <a href="index.html" class="brand">GTM Sandbox</a>
