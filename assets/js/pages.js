@@ -188,20 +188,9 @@
       e.preventDefault();
       var txnId = 'T-' + Date.now().toString(36).toUpperCase() + '-' +
                   Math.random().toString(36).slice(2, 6).toUpperCase();
-      var fd = new FormData(form);
       sessionStorage.setItem('gtm_sandbox_last_txn', JSON.stringify({
         id: txnId,
-        lines: lines.map(function (l) { return { id: l.product.id, quantity: l.quantity }; }),
-        // Customer fields (no card) so the thank-you page can send ContactInfo
-        // to Tracklution alongside the Purchase event (see tracklution.js).
-        customer: {
-          name: fd.get('name') || '',
-          email: fd.get('email') || '',
-          phone: fd.get('phone') || '',
-          address: fd.get('address') || '',
-          city: fd.get('city') || '',
-          zip: fd.get('zip') || ''
-        }
+        lines: lines.map(function (l) { return { id: l.product.id, quantity: l.quantity }; })
       }));
       window.GA4.purchase(txnId, lines, { tax: 0, shipping: 0 });
       window.Cart.clear();
