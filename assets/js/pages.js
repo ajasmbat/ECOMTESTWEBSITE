@@ -139,7 +139,13 @@
     root.addEventListener('click', function (e) {
       var row = e.target.closest('tr[data-product-id]');
       if (!row) {
-        if (e.target.id === 'go-checkout') { window.GA4.beginCheckout(); }
+        if (e.target.id === 'go-checkout') {
+          // Give the tags ~1s to send before leaving the page, as a real theme would
+          // (an immediate navigation cancels the in-flight requests).
+          e.preventDefault();
+          window.GA4.beginCheckout();
+          setTimeout(function () { window.location.href = 'checkout.html'; }, 1000);
+        }
         return;
       }
       var p = window.getProduct(row.dataset.productId);
@@ -194,7 +200,8 @@
       }));
       window.GA4.purchase(txnId, lines, { tax: 0, shipping: 0 });
       window.Cart.clear();
-      window.location.href = 'thankyou.html';
+      // Same 1s grace: the purchase tags (GA4, Google Ads, Meta) need the page alive to send.
+      setTimeout(function () { window.location.href = 'thankyou.html'; }, 1000);
     });
   }
 
