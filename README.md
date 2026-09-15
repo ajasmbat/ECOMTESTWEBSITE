@@ -138,3 +138,16 @@ No pushes of its own — use it to build a GTM **Scroll Depth** trigger (25 / 50
 ## GA4 ecommerce event schema
 
 Every commerce event pushes the recommended GA4 shape: `{ event: '<name>', ecommerce: { currency, value, items: [...] } }`, preceded by `{ ecommerce: null }` to clear the previous object per Google's recommendation. Item objects use `item_id`, `item_name`, `item_brand`, `item_category`, `price`, `quantity`, `currency`, and (for list events) `item_list_id`, `item_list_name`, `index`. The `purchase` event additionally includes `transaction_id`, `tax`, and `shipping`.
+
+
+## Existing merchant tags (tagsmanager test bed)
+
+`assets/js/ids.js` + `assets/js/tags.js` install the classic three snippets a merchant ends up with —
+the GTM snippet for this sandbox's container, `gtag` for GA4/Google Ads, and the Meta pixel — so
+tagsmanager's doors can be tested against a "site that already has Google tags":
+
+- **Line above Google's:** paste tagsmanager's snippet in `<head>` ABOVE `tags.js` (full mask).
+- **Inside GTM:** add the tagsmanager tag (gallery template or Custom HTML) in GTM-5CX4WCSL, All Pages.
+- **Import:** connect Google in tagsmanager and read GTM-5CX4WCSL.
+
+`tags.js` skips any id still containing `XXXX`; set real throwaway ids in `ids.js`.
