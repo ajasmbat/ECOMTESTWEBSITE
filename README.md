@@ -147,7 +147,7 @@ the GTM snippet for this sandbox's container, `gtag` for GA4/Google Ads, and the
 tagsmanager's doors can be tested against a "site that already has Google tags":
 
 - **Line above Google's:** paste tagsmanager's snippet in `<head>` ABOVE `tags.js` (full mask).
-- **Inside GTM:** add the tagsmanager tag (gallery template or Custom HTML) in GTM-5CX4WCSL, All Pages.
-- **Import:** connect Google in tagsmanager and read GTM-5CX4WCSL.
+- **Inside GTM:** add the tagsmanager tag (gallery template or Custom HTML) in GTM-P24QKWFD, All Pages.
+- **Import:** connect Google in tagsmanager and read GTM-P24QKWFD.
 
 `tags.js` skips any id still containing `XXXX`; set real throwaway ids in `ids.js`.
